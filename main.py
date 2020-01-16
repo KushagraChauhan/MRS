@@ -1,6 +1,7 @@
 import pandas
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
+import recommender as Recommenders
 
 #add the music datasets
 triplets_file = 'https://static.turi.com/datasets/millionsong/10000.txt'
@@ -40,4 +41,24 @@ songs = song_df['song'].unique()
 #Dividing the data into train and test
 
 train_data, test_data = train_test_split(song_df, test_size=0.20, random_state=0)
-print(train_data.head(5))
+#print(train_data.head(5))
+
+is_model = Recommenders.item_similarity_recommender_py()
+is_model.create(train_data, 'user_id', 'song')
+
+user_id = users[5]
+user_items = is_model.get_user_items(user_id)
+#
+print("------------------------------------------------------------------------------------")
+print("Training data songs for the user userid: %s:" % user_id)
+print("------------------------------------------------------------------------------------")
+
+for user_item in user_items:
+    print(user_item)
+
+print("----------------------------------------------------------------------")
+print("Recommendation process going on:")
+print("----------------------------------------------------------------------")
+
+#Recommend songs for the user using personalized model
+is_model.recommend(user_id)
